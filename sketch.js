@@ -6,6 +6,8 @@ const Constraint = Matter.Constraint;
 var engine, world;
 var backgroundImg;
 
+var minute;
+var hour;
 var bg ;
 
 function preload() {
@@ -17,26 +19,29 @@ function setup(){
     var canvas = createCanvas(1200,700);
     engine = Engine.create();
     world = engine.world;
-
 }
 
-async function draw(){
+function draw(){
 
     // add condition to check if any background image is there to add
     if(backgroundImg){
-    background(backgroundImg);
-
+        background(backgroundImg);
+    }
     Engine.update(engine);
 
-    // write code to display time in correct format here
-    var response = await fetch("http://worldclockapi.com/api/json/est/now");
-    var responseJSON = await response.json();
-    var datetime = responseJSON.currentDateTime;
-    var time = datetime.slice(11,16)
-    
-    text("TIME:"+ time, 100,50);
+    // write code to display time in correct format here 
+    textSize(20);
     fill("white");
-    textSize(25);
+    stroke("red");
+
+    if(hour>= 12){
+        text("Time:"+ hour%12 + minute +"PM", 50,100);
+    }
+    else if(hour == 0){
+        text("Time:12 AM", 100,100)
+    }
+    else{
+        text("Time:"+ hour%12 + minute +"AM", 50,100);
     }
 }
 
@@ -50,8 +55,11 @@ async function getBackgroundImg(){
     console.log(datetime);
 
     // write code slice the datetime
-    var hour = datetime.slice(11,13);
+    hour = datetime.slice(11,13);
     console.log(hour);
+
+    minute = datetime.slice(13,16);
+    console.log(minute);
     
     // add conditions to change the background images from sunrise to sunset
     if(hour>= 04 && hour<= 06){
